@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TT": {
+      "commandName": "Project",
+      "commandLineArgs": "-InputP \"C:\\Users\\Sheva\\Desktop\\Тестовое задание Backend\\Задание2\\Devices.json\" -OutputP \"C:\\Users\\Sheva\\Desktop\\Тестовое задание Backend\\Задание2\\DevicesOutput.json\""
+    }
+  }
+}
