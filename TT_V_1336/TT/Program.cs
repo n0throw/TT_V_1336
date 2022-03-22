@@ -1,13 +1,23 @@
-﻿#region project_lib
-using TT.IO;
-#endregion
+﻿using TT.IO.JSON;
 
 namespace TT;
 
 public class Program
 {
-    private static Checker checker;
+    private static JSONDevicesReader reader;
+    private static JSONConflictsWriter writer;
+
     public static void Main(string[] args)
+    {
+        (string inputPath, string outputPath) = GetPath(args);
+
+        reader = new JSONDevicesReader(inputPath);
+        writer = new JSONConflictsWriter(outputPath);
+
+        writer.Write(ConflictsChecker.Check(reader.Read()));
+    }
+
+    private static (string inputPath, string outputPath) GetPath(string[] args)
     {
         (string inputPath, string outputPath) = (string.Empty, string.Empty);
 
@@ -42,10 +52,7 @@ public class Program
             Console.Write("\nOutput Path:\t");
             outputPath = Console.ReadLine();
         }
-        checker = new Checker(new JSONReader(), new JSONWriter());
 
-        checker.Read(inputPath);
-        checker.Check();
-        checker.Write(outputPath);
+        return (inputPath, outputPath);
     }
 }

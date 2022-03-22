@@ -8,4 +8,12 @@
     <StartupObject>TT.Program</StartupObject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="IO\JSON\" />
+    <None Remove="IO\TXT\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IO\JSON\" />
+    <Folder Include="IO\Text\" />
+  </ItemGroup>
 </Project>

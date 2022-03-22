@@ -1,32 +1,13 @@
-﻿#region project_lib
-using TT.dtoContract;
-using TT.IO;
-#endregion
+﻿using TT.dtoContract;
 
 namespace TT;
 
-public class Checker
+public static class ConflictsChecker
 {
-    public List<DeviceInfo> devices;
-    public List<Conflict> conflicts;
-    private readonly IReader reader;
-    private readonly IWriter writer;
-
-    public Checker(IReader reader, IWriter writer)
+    public static List<Conflict> Check(List<DeviceInfo> devices)
     {
-        devices = new();
-        conflicts = new();
-
-        this.reader = reader;
-        this.writer = writer;
-    }
-
-    public void Read(string path) => devices = reader.Read(path);
-    public void Write(string path) => writer.Write(conflicts, path);
-    public void Check()
-    {
-        conflicts.Clear();
-        List<string> uniqueCode = GetUniqueCode();
+        List<Conflict> conflicts = new();
+        List<string> uniqueCode = GetUniqueCode(devices);
 
         for (int i = 0; i < uniqueCode.Count; i++)
         {
@@ -40,28 +21,26 @@ public class Checker
                     DevicesSerials = GetDevicesSerials(tempDevices)
                 });
             }
+        }
 
-        }        
+        return conflicts;
     }
 
-    private List<string> GetUniqueCode()
+    private static List<string> GetUniqueCode(List<DeviceInfo> devices)
     {
-        List<string> output = new();
-        devices.ForEach(device =>
-        {
-            if (!output.Contains(device.Brigade.Code))
-                output.Add(device.Brigade.Code);
-        });
+        List<string> output = new(devices.Count);
 
-        return output;
+        devices.ForEach(device => output.Add(device.Brigade.Code));
+
+        return output.Distinct().ToList();
     }
 
-    private static string[] GetDevicesSerials(List<DeviceInfo> tempDevices)
+    private static string[] GetDevicesSerials(List<DeviceInfo> devices)
     {
-        string[] output = new string[tempDevices.Count];
+        string[] output = new string[devices.Count];
 
-        for (int i = 0; i < tempDevices.Count; i++)
-            output[i] = tempDevices[i].Device.SerialNumber;
+        for (int i = 0; i < devices.Count; i++)
+            output[i] = devices[i].Device.SerialNumber;
 
         return output;
     }
